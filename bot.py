@@ -1,7 +1,7 @@
 # LECON
-# guild sert a prendre les donner sur serveur
+# guild sert a prendre les donnée sur serveur
 # ctx sert a avoir le contexte
-# sert a faire foncionner tout ce quil ya dans les {}
+# f sert a faire foncionner tout ce quil ya dans les {}
 # les {} sert un introduire autre chose que tu texte (variable) dans une chaine de caractere
 # len est comme un ParInt en js il sert a transformer une chaine de caractere en nombre
 # \n sert a faire un retour a la ligne comme la balise <br>
@@ -10,11 +10,19 @@
 # .join est une fonction par python qui permet de mettre ce qu'on veut entre chaque mot et on l'ecrit comme sa
 # (" ".join(le nom de l'argument))
 # FOR IN sert a parcourir une liste for = comme en js (la valeur de depart) et in l'endroit a parcourir
+# Pour les EMBED c'est simple il sufit d'ajouter 'discord.Embed' a une variable avec un 'title'(le titre), 'description', un lien 'url' et une couleur avec color = (couleur en exadesimal)
+# on peut aussi lui ajouter a cette embed une image avec la commande '(nom de la variable).set_thumbnail(url = (l'url de l'image)
+# Pour ajouter du contenue a l'embed on utilise (nom de la variable).add_field a qui on peut mettre plein de parametre tel que 'name' 'value'
+# Pour les embed on peut y ajouter un auteur et sa pp avec la commande (nom de la variable).set author(name = ctx.author.name(pour son nom) et icon_url = ctx.author.avatar.url(pour sa pp))
+# comme le math random en js il exciste un equivalant pour choisir aleatoirement un item qu'on a crée dans un tableau (comme un js) au prealable avec la commande (text = 'random.choise(nom de votre tableau))
 
 import os
 import asyncio
 import discord
+import youtube_dl
 from discord.ext import commands
+import random
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -31,15 +39,18 @@ async def on_ready():
     await client.change_presence(activity=discord.Activity
     (type=discord.ActivityType.watching, name="En developpement"))
 
-    # COMMANDES CLASSIQUE
+
+ # COMMANDES CLASSIQUE
 
 
 @client.command()
 @commands.has_permissions(administrator=True)
 async def latence(ctx):
-    await ctx.send(f"Voila la latance du bot {client.latency}", delete_after=5)
+    embed = discord.Embed(title = "**Latence**")
+    embed.set_thumbnail(url ="https://images.frandroid.com/wp-content/uploads/2021/03/latence-reseau-lag.png")
+    embed.add_field(name="Latence tu bot",value=f"**{client.latency}**")
+    await ctx.send (embed = embed)
     await ctx.message.delete()
-
 
 @client.command()
 async def say(ctx, *texte):
@@ -269,6 +280,46 @@ async def last_message(ctx):
     last_msg = ctx.message.author
     if ctx.last_message == "assistante":
         await ctx.send(f"Vous parlez de moi {last_msg} ?")
+
+
+
+# COMMANDE POUR JOUER DE LA MUSIQUE
+
+musics = {}
+
+ytdl = youtube_dl.YoutubeDL()
+
+
+class Video:
+    def __init__(self, link):
+        video = ytdl.extract_info(link, download = False)
+        video_format = video["formets"][0]
+        self.url = video["webpage_url"]
+        self.stream_url = video_format["url"]
+
+
+def play_song(voiceClient,song):
+    source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(song.stream_url , before_options = '-reconnect 1 -reconnected_streamed 1 -reconnect_delay_max 5'))
+
+    voiceClient.play(source)
+
+@client.command()
+async def play(ctx, url):
+    print("play")
+    voiceClient = ctx.guild.voice_client
+
+    if voiceClient and voiceClient.channel:
+        video = Video(url)
+        musics[ctx.guild].append(video)
+
+    else:
+        channel = ctx.author.voice.channel
+        video = Video(url)
+        musics[ctx.guild] = []
+        voiceClient = await channel.connect()
+        await ctx.send(f"Je lance : {video.url} ")
+        play_song(client, video)
+
 
 
 client.run(TOKEN)
