@@ -285,40 +285,40 @@ async def last_message(ctx):
 
 # COMMANDE POUR JOUER DE LA MUSIQUE
 
-musics = {}
+# musics = {}
 
-ytdl = youtube_dl.YoutubeDL()
-
-
-class Video:
-    def __init__(self, link):
-        video = ytdl.extract_info(link, download = False)
-        video_format = video["formets"][0]
-        self.url = video["webpage_url"]
-        self.stream_url = video_format["url"]
+# ytdl = youtube_dl.YoutubeDL()
 
 
-def play_song(voiceClient,song):
-    source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(song.stream_url , before_options = '-reconnect 1 -reconnected_streamed 1 -reconnect_delay_max 5'))
+# class Video:
+#     def __init__(self, link):
+#         video = ytdl.extract_info(link, download = False)
+#         video_format = video["formets"][0]
+#         self.url = video["webpage_url"]
+#         self.stream_url = video_format["url"]
 
-    voiceClient.play(source)
 
-@client.command()
-async def play(ctx, url):
-    print("play")
-    voiceClient = ctx.guild.voice_client
+# def play_song(voiceClient,song):
+#     source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(song.stream_url , before_options = '-reconnect 1 -reconnected_streamed 1 -reconnect_delay_max 5'))
 
-    if voiceClient and voiceClient.channel:
-        video = Video(url)
-        musics[ctx.guild].append(video)
+#     voiceClient.play(source)
 
-    else:
-        channel = ctx.author.voice.channel
-        video = Video(url)
-        musics[ctx.guild] = []
-        voiceClient = await channel.connect()
-        await ctx.send(f"Je lance : {video.url} ")
-        play_song(client, video)
+# @client.command()
+# async def play(ctx, url):
+#     print("play")
+#     voiceClient = ctx.guild.voice_client
+
+#     if voiceClient and voiceClient.channel:
+#         video = Video(url)
+#         musics[ctx.guild].append(video)
+
+#     else:
+#         channel = ctx.author.voice.channel
+#         video = Video(url)
+#         musics[ctx.guild] = []
+#         voiceClient = await channel.connect()
+#         await ctx.send(f"Je lance : {video.url} ")
+#         play_song(client, video)
 
 
 
