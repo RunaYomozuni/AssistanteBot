@@ -150,7 +150,7 @@ async def kick(ctx, user: discord.User, *reason):
 
 
 def commandeRuna(ctx):
-    return ctx.message.author.id == 360875952403644446
+    return ctx.message.author.id == 529254405271453707
 
 
 @client.command()
