@@ -135,27 +135,26 @@ async def kick(ctx, user: discord.User, *reason):
     await ctx.guild.kick(user, reason=reason)
     await ctx.send(f"{user} à été kick \n Pour raison :{reason}")
 
-    # BAN LIST
+
+# BAN LIST
+
+
+# @client.command()
+# @commands.has_permissions(administrator=True)
+# async def banlist(ctx):
+#     bannedUsers = await ctx.guild.bans()
+#     for i in bannedUsers:
+
+
+# COMMANDE PERSONALISÉ POUR RUNA
+
+
+def commandeRuna(ctx):
+    return ctx.message.author.id == 360875952403644446
 
 
 @client.command()
-@commands.has_permissions(administrator=True)
-async def banlist(ctx):
-    bannedUsers = await ctx.guild.bans()
-    for i in bannedUsers:
-        if i == bannedUser:
-            return i
-
-
-# COMMANDE PERSONALISÉ POUR FOXY
-
-
-def commandeFoxy(ctx):
-    return ctx.message.author.id == 269563995512504321
-
-
-@client.command()
-@commands.check(commandeFoxy)
+@commands.check(commandeRuna)
 async def madeinheaven(ctx, heaven: discord.Member):
     pseudo = heaven.mention
     await ctx.send(f"**- Le sort a été jeté sur {pseudo}**")
@@ -166,7 +165,7 @@ async def madeinheaven(ctx, heaven: discord.Member):
     await asyncio.sleep(4)
     await ctx.send("**- L'univers ne veut plus de toi**")
     await asyncio.sleep(4)
-    await ctx.guild.ban(heaven)
+    # await ctx.guild.ban(heaven)
     await ctx.send("**MADE IN HEAVEN !**")
     await ctx.send("https://tenor.com/view/made-in-heaven-jojo-stand-gif-19197510")
     await ctx.message.delete()
@@ -183,7 +182,8 @@ async def cookie(ctx):
     await ctx.send("https://emoji.gg/assets/emoji/4809-minecraft-cookie.png", delete_after=9)
     await ctx.message.delete()
 
-    # COMMANDE PERSONALISÉ POUR DONNER UN COOKI
+
+# COMMANDE PERSONALISÉ POUR DONNER UN COOKIE
 
 
 @client.command()
@@ -193,6 +193,7 @@ async def givecookie(ctx, drop: discord.Member):
     await asyncio.sleep(1)
     await ctx.send("https://emoji.gg/assets/emoji/4809-minecraft-cookie.png")
     await ctx.message.delete()
+
 
 
 # COMMANDE JAIL
@@ -261,6 +262,13 @@ async def unjail(ctx, member: discord.Member):
     await member.add_roles(memberRole)
     await ctx.send(f"{member.mention} est sorti de prison !")
     await ctx.message.delete()
+
+
+@client.event
+async def last_message(ctx):
+    last_msg = ctx.message.author
+    if ctx.last_message == "assistante":
+        await ctx.send(f"Vous parlez de moi {last_msg} ?")
 
 
 client.run(TOKEN)
