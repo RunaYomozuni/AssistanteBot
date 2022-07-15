@@ -1,7 +1,7 @@
 # LECON
-# guild sert a prendre les donnée sur serveur
+# guild sert a prendre les donner sur serveur
 # ctx sert a avoir le contexte
-# f sert a faire foncionner tout ce quil ya dans les {}
+# sert a faire foncionner tout ce quil ya dans les {}
 # les {} sert un introduire autre chose que tu texte (variable) dans une chaine de caractere
 # len est comme un ParInt en js il sert a transformer une chaine de caractere en nombre
 # \n sert a faire un retour a la ligne comme la balise <br>
@@ -10,23 +10,15 @@
 # .join est une fonction par python qui permet de mettre ce qu'on veut entre chaque mot et on l'ecrit comme sa
 # (" ".join(le nom de l'argument))
 # FOR IN sert a parcourir une liste for = comme en js (la valeur de depart) et in l'endroit a parcourir
-# Pour les EMBED c'est simple il sufit d'ajouter 'discord.Embed' a une variable avec un 'title'(le titre), 'description', un lien 'url' et une couleur avec color = (couleur en exadesimal)
-# on peut aussi lui ajouter a cette embed une image avec la commande '(nom de la variable).set_thumbnail(url = (l'url de l'image)
-# Pour ajouter du contenue a l'embed on utilise (nom de la variable).add_field a qui on peut mettre plein de parametre tel que 'name' 'value'
-# Pour les embed on peut y ajouter un auteur et sa pp avec la commande (nom de la variable).set author(name = ctx.author.name(pour son nom) et icon_url = ctx.author.avatar.url(pour sa pp))
-# comme le math random en js il exciste un equivalant pour choisir aleatoirement un item qu'on a crée dans un tableau (comme un js) au prealable avec la commande (text = 'random.choise(nom de votre tableau))
 
 import os
 import asyncio
 import discord
-# import youtube_dl
 from discord.ext import commands
-import random
-
 from dotenv import load_dotenv
 
 load_dotenv()
-TOKEN = os.getenv('Token')
+TOKEN = os.getenv('TOKEN')
 default_intents = discord.Intents.default()
 default_intents.members = True
 new = discord.Client(intents=default_intents)
@@ -39,18 +31,15 @@ async def on_ready():
     await client.change_presence(activity=discord.Activity
     (type=discord.ActivityType.watching, name="En developpement"))
 
-
- # COMMANDES CLASSIQUE
+    # COMMANDES CLASSIQUE
 
 
 @client.command()
 @commands.has_permissions(administrator=True)
 async def latence(ctx):
-    embed = discord.Embed(title = "**Latence**")
-    embed.set_thumbnail(url ="https://images.frandroid.com/wp-content/uploads/2021/03/latence-reseau-lag.png")
-    embed.add_field(name="Latence tu bot",value=f"**{client.latency}**")
-    await ctx.send (embed = embed)
+    await ctx.send(f"Voila la latance du bot {client.latency}", delete_after=5)
     await ctx.message.delete()
+
 
 @client.command()
 async def say(ctx, *texte):
@@ -146,8 +135,7 @@ async def kick(ctx, user: discord.User, *reason):
     await ctx.guild.kick(user, reason=reason)
     await ctx.send(f"{user} à été kick \n Pour raison :{reason}")
 
-
-# BAN LIST
+    # BAN LIST
 
 
 # @client.command()
@@ -155,17 +143,19 @@ async def kick(ctx, user: discord.User, *reason):
 # async def banlist(ctx):
 #     bannedUsers = await ctx.guild.bans()
 #     for i in bannedUsers:
+#         if i == bannedUser:
+#             return i
 
 
-# COMMANDE PERSONALISÉ POUR RUNA
+# COMMANDE PERSONALISÉ POUR FOXY
 
 
-def commandeRuna(ctx):
-    return ctx.message.author.id == 529254405271453707
+def commandeFoxy(ctx):
+    return ctx.message.author.id == 269563995512504321
 
 
 @client.command()
-@commands.check(commandeRuna)
+@commands.check(commandeFoxy)
 async def madeinheaven(ctx, heaven: discord.Member):
     pseudo = heaven.mention
     await ctx.send(f"**- Le sort a été jeté sur {pseudo}**")
@@ -176,7 +166,7 @@ async def madeinheaven(ctx, heaven: discord.Member):
     await asyncio.sleep(4)
     await ctx.send("**- L'univers ne veut plus de toi**")
     await asyncio.sleep(4)
-    # await ctx.guild.ban(heaven)
+    await ctx.guild.ban(heaven)
     await ctx.send("**MADE IN HEAVEN !**")
     await ctx.send("https://tenor.com/view/made-in-heaven-jojo-stand-gif-19197510")
     await ctx.message.delete()
@@ -193,8 +183,7 @@ async def cookie(ctx):
     await ctx.send("https://emoji.gg/assets/emoji/4809-minecraft-cookie.png", delete_after=9)
     await ctx.message.delete()
 
-
-# COMMANDE PERSONALISÉ POUR DONNER UN COOKIE
+    # COMMANDE PERSONALISÉ POUR DONNER UN COOKI
 
 
 @client.command()
@@ -204,7 +193,6 @@ async def givecookie(ctx, drop: discord.Member):
     await asyncio.sleep(1)
     await ctx.send("https://emoji.gg/assets/emoji/4809-minecraft-cookie.png")
     await ctx.message.delete()
-
 
 
 # COMMANDE JAIL
@@ -273,53 +261,6 @@ async def unjail(ctx, member: discord.Member):
     await member.add_roles(memberRole)
     await ctx.send(f"{member.mention} est sorti de prison !")
     await ctx.message.delete()
-
-
-@client.event
-async def last_message(ctx):
-    last_msg = ctx.message.author
-    if ctx.last_message == "assistante":
-        await ctx.send(f"Vous parlez de moi {last_msg} ?")
-
-
-
-# COMMANDE POUR JOUER DE LA MUSIQUE
-
-# musics = {}
-
-# ytdl = youtube_dl.YoutubeDL()
-
-
-# class Video:
-#     def __init__(self, link):
-#         video = ytdl.extract_info(link, download = False)
-#         video_format = video["formets"][0]
-#         self.url = video["webpage_url"]
-#         self.stream_url = video_format["url"]
-
-
-# def play_song(voiceClient,song):
-#     source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(song.stream_url , before_options = '-reconnect 1 -reconnected_streamed 1 -reconnect_delay_max 5'))
-
-#     voiceClient.play(source)
-
-# @client.command()
-# async def play(ctx, url):
-#     print("play")
-#     voiceClient = ctx.guild.voice_client
-
-#     if voiceClient and voiceClient.channel:
-#         video = Video(url)
-#         musics[ctx.guild].append(video)
-
-#     else:
-#         channel = ctx.author.voice.channel
-#         video = Video(url)
-#         musics[ctx.guild] = []
-#         voiceClient = await channel.connect()
-#         await ctx.send(f"Je lance : {video.url} ")
-#         play_song(client, video)
-
 
 
 client.run(TOKEN)
